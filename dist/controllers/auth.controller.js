@@ -17,6 +17,7 @@ const handle_async_1 = __importDefault(require("../helpers/handle.async"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const prisma_client_1 = __importDefault(require("../helpers/prisma.client"));
 const error_handler_1 = require("../helpers/error.handler");
+const generate_token_1 = require("../helpers/generate.token");
 exports.register = (0, handle_async_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, username, password } = req.body;
     const userExists = yield prisma_client_1.default.user.findFirst({
@@ -51,5 +52,5 @@ exports.login = (0, handle_async_1.default)((req, res, next) => __awaiter(void 0
     if (!isPasswordCorrect) {
         return next(new error_handler_1.GlobalError("Invalid credentials provided", 400));
     }
-    res.status(200).json(user);
+    (0, generate_token_1.generateAndSendToken)({ user, statusCode: 200, res });
 }));

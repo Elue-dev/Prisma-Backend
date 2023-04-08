@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import prisma from "../helpers/prisma.client";
 import { GlobalError } from "../helpers/error.handler";
+import { generateAndSendToken } from "../helpers/generate.token";
 
 interface userPayload {
   email: string;
@@ -57,6 +58,6 @@ export const login = handleAsync(
       return next(new GlobalError("Invalid credentials provided", 400));
     }
 
-    res.status(200).json(user);
+    generateAndSendToken({ user, statusCode: 200, res });
   }
 );

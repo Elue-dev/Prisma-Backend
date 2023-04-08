@@ -27,17 +27,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const posts_routes_1 = __importDefault(require("./routes/posts.routes"));
 const error_controller_1 = __importDefault(require("./controllers/error.controller"));
 const error_handler_1 = require("./helpers/error.handler");
 const app = (0, express_1.default)();
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+});
 app.use((0, express_1.json)());
+app.use((0, cookie_parser_1.default)());
 app.use((req, res, next) => {
     next();
 });
 app.use("/api/auth", auth_routes_1.default);
 app.use("/api/users", user_routes_1.default);
+app.use("/api/posts", posts_routes_1.default);
 app.all("*", (req, res, next) => {
     next(new error_handler_1.GlobalError(`Can't find ${req.originalUrl} on this server`, 404));
 });
